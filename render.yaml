@@ -1,5 +1,5 @@
 # Ejemplo Render.com — alinear rama de despliegue con `develop` del repositorio GitHub.
-# https://github.com/davidluna301/Gestion_Hospital
+# https://github.com/davidluna301/MedHospital
 services:
   - type: web
     name: consultamed

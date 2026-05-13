@@ -1,5 +1,5 @@
 """
-Django settings — ConsultaMed (gestión hospitalaria).
+Django settings — MedHospital (gestión hospitalaria).
 """
 import os
 from pathlib import Path
@@ -127,7 +127,7 @@ EMAIL_BACKEND = os.environ.get(
     "EMAIL_BACKEND",
     "django.core.mail.backends.console.EmailBackend",
 )
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "ConsultaMed <noreply@consultamed.local>")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "MedHospital <noreply@medhospital.local>")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
