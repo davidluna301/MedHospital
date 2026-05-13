@@ -1,0 +1,16 @@
+# Credenciales de demostración local únicamente (no producción).
+
+Estas cuentas las crea el comando `python manage.py seed_demo` después de `migrate`.
+
+| Rol            | Correo                      | Contraseña    |
+|----------------|-----------------------------|---------------|
+| Administrador  | admin@consultamed.local     | Admin123!     |
+| Operador       | operador@consultamed.local  | Operador123!  |
+| Médico         | medico@consultamed.local    | Medico123!    |
+| Paciente       | paciente@consultamed.local  | Paciente123!  |
+
+- El **administrador** registra nuevos médicos desde **Médicos → Nuevo**.
+- El **operador** registra pacientes desde **Pacientes → Nuevo** (icono +).
+- Los **pacientes** no se registran solos en la web pública; deben ser dados de alta por recepción (o vía `/admin/` en casos excepcionales).
+
+**Nota:** No use estas contraseñas en producción.
