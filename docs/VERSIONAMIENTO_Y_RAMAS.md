@@ -252,6 +252,20 @@ develop  <---- pull antes de cada nueva rama; merges solo con PR aprobado por OT
 feature/devX-tarea
 ```
 
+## Publicar este repositorio en GitHub (primera vez)
+
+1. En GitHub, crear un repositorio vacío llamado **`MedHospital`** (sin README ni `.gitignore` generados por GitHub, para evitar conflictos).
+2. En la carpeta local del proyecto:
+
+```bash
+git remote add origin https://github.com/davidluna301/MedHospital.git
+git push -u origin develop
+git push -u origin main
+git push origin feature/dev2-autenticacion feature/dev3-reportes feature/dev3-seed feature/dev4-pipeline feature/dev4-observabilidad hotfix/dev1-readme-typos
+```
+
+3. Abrir **Git Graph** en VS Code: debería verse `main` con commits base, `develop` con integraciones y ramas de características que convergen en merges con dos padres (`--no-ff`).
+
 ## Comprobar estado
 
 ```bash
@@ -259,4 +273,3 @@ git status
 git log develop --oneline -15
 git branch -a
 ```
-MedHospital - trazabilidad Git (extension Git Graph)
