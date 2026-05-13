@@ -1,4 +1,4 @@
-# ConsultaMed — Gestión hospitalaria y citas médicas
+# MedHospital — Gestión hospitalaria y citas médicas
 
 Aplicación web **Django** (MVT) para agendar citas, administrar pacientes y médicos, historias clínicas básicas, horarios de disponibilidad, panel con **Chart.js**, exportación **PDF/Excel** y confirmación de citas por **correo** (en desarrollo se usa el backend de consola).
 
@@ -10,7 +10,7 @@ Diseñar e implementar un sistema que permita **coordinar la atención ambulator
 
 ## Repositorio y versionamiento
 
-- **Repositorio GitHub:** [https://github.com/davidluna301/Gestion_Hospital](https://github.com/davidluna301/Gestion_Hospital)
+- **Repositorio GitHub:** [https://github.com/davidluna301/MedHospital](https://github.com/davidluna301/MedHospital)
 - **Rama de integración del equipo:** `develop` (trabajo diario y merges de características).
 - **Política:** no realizar commits directos a **`main`** salvo acuerdo explícito del dueño del repositorio (p. ej. release).
 - **Guía detallada de ramas, PR y convención de commits:** ver [`docs/VERSIONAMIENTO_Y_RAMAS.md`](docs/VERSIONAMIENTO_Y_RAMAS.md).
@@ -34,7 +34,7 @@ Cada persona crea su rama `feature/devN-...` desde `develop` actualizado, sube c
 ## Instalación local
 
 ```bash
-cd finalFramework
+cd MedHospital
 python -m venv .venv
 .venv\Scripts\activate          # Windows
 # source .venv/bin/activate     # Linux / macOS
@@ -191,7 +191,7 @@ Al pasar una cita a estado **Confirmada**, se envía un correo a paciente y méd
 ## Estructura del proyecto
 
 ```
-finalFramework/
+MedHospital/
 ├── accounts/          # Usuario personalizado y autenticación web
 ├── consultas/         # Modelos de dominio, vistas, reportes, señales
 ├── docs/              # Guía de versionamiento y documentación de equipo

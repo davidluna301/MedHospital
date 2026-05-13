@@ -1,8 +1,10 @@
-# Versionamiento y flujo de ramas — ConsultaMed
+# Versionamiento y flujo de ramas — MedHospital
 
 > **Índice:** reglas obligatorias · validación cruzada · equipo · flujo por desarrollador · rol Dev1 · GitGraph (flujo complejo) · flujo de validación (diagrama) · vista mínima · comandos útiles.
 
-Repositorio remoto: **https://github.com/davidluna301/Gestion_Hospital**
+Repositorio remoto: **https://github.com/davidluna301/MedHospital**
+
+Este repositorio incluye un **historial Git real** (varias ramas `feature/*`, `hotfix/*`, merges `--no-ff` y validaciones cruzadas descritas en los mensajes de merge) pensado para visualizar un flujo **denso** en la extensión **Git Graph** de VS Code, similar a un modelo Git Flow con `main` + `develop` + características paralelas.
 
 ## Reglas obligatorias
 
@@ -119,17 +121,18 @@ En GitHub: **Pull Request** con base **`develop`** (no `main`). Asignar **reviso
 - Añadir remoto si el clon es nuevo:
 
 ```bash
-git remote add origin https://github.com/davidluna301/Gestion_Hospital.git
+git remote add origin https://github.com/davidluna301/MedHospital.git
 ```
 
 - Primera vez: publicar `develop` y las ramas `feature/*` de evidencia (no borrar en remoto):
 
 ```bash
 git push -u origin develop
-git push -u origin feature/dev1-docs feature/dev2-accounts feature/dev3-consultas feature/dev4-infra-ui
+git push -u origin main
+git push -u origin feature/dev2-autenticacion feature/dev3-reportes feature/dev3-seed feature/dev4-pipeline feature/dev4-observabilidad hotfix/dev1-readme-typos
 ```
 
-Ramas de ejemplo usadas en este proyecto: `feature/dev1-docs`, `feature/dev2-accounts`, `feature/dev3-consultas`, `feature/dev4-infra-ui`. Cada una apunta a un tramo del historial para mostrar el aporte por rol; `develop` lleva la línea temporal completa (incluido el commit final de empaquetado `__init__.py` si aplica).
+Ramas de ejemplo conservadas en remoto para evidencia en **Git Graph**: `feature/dev2-autenticacion`, `feature/dev3-reportes`, `feature/dev3-seed`, `feature/dev4-pipeline`, `feature/dev4-observabilidad`, `hotfix/dev1-readme-typos`. Los merges hacia `develop` usan `--no-ff` y los mensajes indican **quién validó** (otro dev) antes de integrar.
 
 ## Gráfico Git complejo (GitGraph)
 
