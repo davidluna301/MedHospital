@@ -256,3 +256,4 @@ git status
 git log develop --oneline -15
 git branch -a
 ```
+MedHospital - trazabilidad Git (extension Git Graph)
