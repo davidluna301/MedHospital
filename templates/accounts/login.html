@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Iniciar sesión — ConsultaMed{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card card-cm p-4">
+      <div class="text-center mb-3">
+        <i class="bi bi-box-arrow-in-right display-6" style="color:#0E1F53;" aria-hidden="true"></i>
+        <h1 class="h4 mt-2">Iniciar sesión</h1>
+      </div>
+      <p class="visually-hidden">Formulario de acceso con correo institucional o asignado por recepción.</p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-cm-primary w-100 mt-2">Entrar</button>
+      </form>
+      <p class="small text-muted text-center mt-3 mb-0">¿Necesita una cuenta? Contacte al administrador o a recepción.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

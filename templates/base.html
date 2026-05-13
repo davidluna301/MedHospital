@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ConsultaMed{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-cm shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'consultas:home' %}">
+        <i class="bi bi-heart-pulse-fill fs-4" aria-hidden="true"></i>
+        <span>ConsultaMed</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Menú">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center">
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" href="{% url 'consultas:panel' %}" title="Panel">
+              <i class="bi bi-speedometer2" aria-hidden="true"></i><span class="d-none d-md-inline">Panel</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" href="{% url 'consultas:cita_list' %}" title="Citas">
+              <i class="bi bi-calendar2-check" aria-hidden="true"></i><span class="d-none d-md-inline">Citas</span>
+            </a>
+          </li>
+          {% if user.role == 'ADMIN' or user.role == 'OPERADOR' or user.role == 'MEDICO' %}
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" href="{% url 'consultas:paciente_list' %}" title="Pacientes">
+              <i class="bi bi-people" aria-hidden="true"></i><span class="d-none d-md-inline">Pacientes</span>
+            </a>
+          </li>
+          {% endif %}
+          {% if user.role == 'ADMIN' %}
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" href="{% url 'consultas:doctor_list' %}" title="Médicos">
+              <i class="bi bi-person-badge" aria-hidden="true"></i><span class="d-none d-md-inline">Médicos</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" href="{% url 'consultas:especialidad_list' %}" title="Especialidades">
+              <i class="bi bi-hospital" aria-hidden="true"></i><span class="d-none d-md-inline">Especialidades</span>
+            </a>
+          </li>
+          {% endif %}
+          {% if user.role == 'ADMIN' or user.role == 'MEDICO' %}
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" href="{% url 'consultas:historia_list' %}" title="Historias">
+              <i class="bi bi-journal-medical" aria-hidden="true"></i><span class="d-none d-md-inline">Historias</span>
+            </a>
+          </li>
+          {% endif %}
+          {% if user.role == 'PACIENTE' %}
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" href="{% url 'consultas:historia_list' %}" title="Mi historia clínica">
+              <i class="bi bi-journal-text" aria-hidden="true"></i><span class="d-none d-md-inline">Mi historia</span>
+            </a>
+          </li>
+          {% endif %}
+          {% if user.role == 'ADMIN' or user.role == 'MEDICO' %}
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" href="{% url 'consultas:horario_list' %}" title="Horarios">
+              <i class="bi bi-clock-history" aria-hidden="true"></i><span class="d-none d-md-inline">Horarios</span>
+            </a>
+          </li>
+          {% endif %}
+          {% endif %}
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle fs-5" aria-hidden="true"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><span class="dropdown-item-text small text-muted">{{ user.email }}</span></li>
+              <li><span class="dropdown-item-text small">{{ user.get_role_display }}</span></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form action="{% url 'accounts:logout' %}" method="post" class="px-3">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger w-100"><i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'accounts:login' %}"><i class="bi bi-box-arrow-in-right me-1"></i>Ingresar</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4 flex-grow-1">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer-cm mt-auto py-3">
+    <div class="container small d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-shield-plus me-1"></i>ConsultaMed — gestión de citas</span>
+      <span>{% now "Y" %}</span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

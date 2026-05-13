@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Registrar paciente — ConsultaMed{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3 d-flex align-items-center gap-2"><i class="bi bi-person-plus"></i> Nuevo paciente (atención / recepción)</h1>
+<p class="text-muted small">Solo personal con rol <strong>Operador</strong> puede dar de alta pacientes.</p>
+<div class="card card-cm p-4">
+  <form method="post" novalidate>{% csrf_token %}{{ form|crispy }}
+    <button type="submit" class="btn btn-cm-primary">Registrar paciente</button>
+    <a class="btn btn-link" href="{% url 'consultas:paciente_list' %}">Volver</a>
+  </form>
+</div>
+{% endblock %}

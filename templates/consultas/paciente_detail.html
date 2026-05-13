@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Paciente — ConsultaMed{% endblock %}
+{% block content %}
+<div class="card card-cm p-4">
+  <h1 class="h4 mb-3">{{ object.usuario.get_full_name }}</h1>
+  <dl class="row mb-0">
+    <dt class="col-sm-3">Correo</dt><dd class="col-sm-9">{{ object.usuario.email }}</dd>
+    <dt class="col-sm-3">Nacimiento</dt><dd class="col-sm-9">{{ object.fecha_nacimiento }}</dd>
+    <dt class="col-sm-3">Tipo sangre</dt><dd class="col-sm-9">{{ object.tipo_sangre|default:"—" }}</dd>
+    <dt class="col-sm-3">Teléfono</dt><dd class="col-sm-9">{{ object.telefono|default:"—" }}</dd>
+    <dt class="col-sm-3">Emergencia</dt><dd class="col-sm-9">{{ object.contacto_emergencia|default:"—" }}</dd>
+    <dt class="col-sm-3">Seguro</dt><dd class="col-sm-9">{{ object.numero_seguro|default:"—" }}</dd>
+  </dl>
+  {% if user.role == 'ADMIN' or user.role == 'PACIENTE' or user.role == 'OPERADOR' %}
+  <a class="btn btn-outline-primary mt-3" href="{% url 'consultas:paciente_update' object.pk %}"><i class="bi bi-pencil"></i> Editar</a>
+  {% endif %}
+  <a class="btn btn-link" href="{% url 'consultas:paciente_list' %}">Volver</a>
+</div>
+{% endblock %}

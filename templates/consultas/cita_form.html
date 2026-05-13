@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{{ titulo }} — ConsultaMed{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3 d-flex align-items-center gap-2"><i class="bi bi-calendar-plus"></i> {{ titulo }}</h1>
+<div class="card card-cm p-4">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-cm-primary">Guardar</button>
+    <a class="btn btn-link" href="{% url 'consultas:cita_list' %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

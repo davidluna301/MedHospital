@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Registrar médico — ConsultaMed{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3 d-flex align-items-center gap-2"><i class="bi bi-person-badge"></i> Nuevo médico (solo administrador)</h1>
+<p class="text-muted small">Se crea el usuario con rol médico y su perfil profesional.</p>
+<div class="card card-cm p-4">
+  <form method="post" novalidate>{% csrf_token %}{{ form|crispy }}
+    <button type="submit" class="btn btn-cm-primary">Registrar médico</button>
+    <a class="btn btn-link" href="{% url 'consultas:doctor_list' %}">Volver</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Eliminar horario{% endblock %}
+{% block content %}
+<h1 class="h5">¿Eliminar este horario?</h1>
+<form method="post">{% csrf_token %}
+  <button class="btn btn-danger" type="submit" onclick="return confirm('¿Confirma?');">Eliminar</button>
+  <a class="btn btn-outline-secondary" href="{% url 'consultas:horario_list' %}">Cancelar</a>
+</form>
+{% endblock %}

@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block title %}Panel — ConsultaMed{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 d-flex align-items-center gap-2">
+    <i class="bi bi-speedometer2" style="color:#0E1F53;" aria-hidden="true"></i> Panel
+  </h1>
+  <span class="text-muted small">{{ ahora|date:"SHORT_DATETIME_FORMAT" }}</span>
+</div>
+
+{% if user.role == 'ADMIN' %}
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="card card-cm p-3">
+      <div class="stat-icon mb-2"><i class="bi bi-calendar2-check"></i></div>
+      <div class="text-muted small">Citas</div>
+      <div class="fs-4 fw-semibold">{{ total_citas }}</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card card-cm p-3">
+      <div class="stat-icon mb-2"><i class="bi bi-people"></i></div>
+      <div class="text-muted small">Pacientes</div>
+      <div class="fs-4 fw-semibold">{{ total_pacientes }}</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card card-cm p-3">
+      <div class="stat-icon mb-2"><i class="bi bi-person-badge"></i></div>
+      <div class="text-muted small">Médicos</div>
+      <div class="fs-4 fw-semibold">{{ total_medicos }}</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card card-cm p-3">
+      <div class="stat-icon mb-2"><i class="bi bi-hospital"></i></div>
+      <div class="text-muted small">Especialidades</div>
+      <div class="fs-4 fw-semibold">{{ total_especialidades }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <div class="card card-cm p-3 h-100">
+      <h2 class="h6 mb-3 text-uppercase text-muted">Citas por especialidad</h2>
+      <canvas id="chartEspecialidad" height="220" aria-label="Gráfico de citas por especialidad" role="img"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card card-cm p-3 h-100">
+      <h2 class="h6 mb-3 text-uppercase text-muted">Pacientes nuevos por mes</h2>
+      <canvas id="chartPacientesMes" height="220" aria-label="Gráfico de pacientes nuevos por mes" role="img"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card card-cm p-3 mb-4">
+  <h2 class="h6 mb-3 d-flex align-items-center gap-2"><i class="bi bi-lightning-charge"></i> Actividad reciente</h2>
+  <div class="table-responsive">
+    <table class="table table-sm align-middle mb-0">
+      <thead><tr><th>Cita</th><th>Paciente</th><th>Médico</th><th>Estado</th></tr></thead>
+      <tbody>
+        {% for c in citas_recientes %}
+        <tr>
+          <td>#{{ c.pk }}</td>
+          <td>{{ c.paciente }}</td>
+          <td>{{ c.medico }}</td>
+          <td><span class="badge text-bg-light border">{{ c.get_estado_display }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-muted">Sin citas aún.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if user.role == 'MEDICO' %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card card-cm p-3">
+      <div class="stat-icon mb-2"><i class="bi bi-calendar2-check"></i></div>
+      <div class="text-muted small">Mis citas</div>
+      <div class="fs-4 fw-semibold">{{ total_citas|default:0 }}</div>
+    </div>
+  </div>
+</div>
+<div class="card card-cm p-3">
+  <h2 class="h6 mb-3">Próximas citas</h2>
+  <ul class="list-group list-group-flush">
+    {% for c in citas_recientes %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-person me-1"></i>{{ c.paciente }}</span>
+      <span class="small text-muted">{{ c.fecha_hora }}</span>
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">Sin citas.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% if user.role == 'OPERADOR' %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card card-cm p-3">
+      <div class="stat-icon mb-2"><i class="bi bi-calendar2-check"></i></div>
+      <div class="text-muted small">Citas en sistema</div>
+      <div class="fs-4 fw-semibold">{{ total_citas }}</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-cm p-3">
+      <div class="stat-icon mb-2"><i class="bi bi-people"></i></div>
+      <div class="text-muted small">Pacientes</div>
+      <div class="fs-4 fw-semibold">{{ total_pacientes }}</div>
+    </div>
+  </div>
+</div>
+<div class="card card-cm p-3 mb-4">
+  <h2 class="h6 mb-3 d-flex align-items-center gap-2"><i class="bi bi-reception-4"></i> Últimas citas registradas</h2>
+  <div class="table-responsive">
+    <table class="table table-sm align-middle mb-0">
+      <thead><tr><th>Cita</th><th>Paciente</th><th>Médico</th><th>Estado</th></tr></thead>
+      <tbody>
+        {% for c in citas_recientes %}
+        <tr>
+          <td>#{{ c.pk }}</td>
+          <td>{{ c.paciente }}</td>
+          <td>{{ c.medico }}</td>
+          <td><span class="badge text-bg-light border">{{ c.get_estado_display }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-muted">Sin citas aún.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if user.role == 'PACIENTE' %}
+<div class="card card-cm p-3">
+  <h2 class="h6 mb-3">Mis citas</h2>
+  <ul class="list-group list-group-flush">
+    {% for c in mis_citas %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-person-badge me-1"></i>{{ c.medico }} — {{ c.medico.especialidad }}</span>
+      <span class="small text-muted">{{ c.fecha_hora }}</span>
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">Aún no tiene citas.</li>
+    {% endfor %}
+  </ul>
+  <a class="btn btn-cm-primary mt-3" href="{% url 'consultas:cita_create' %}"><i class="bi bi-plus-lg me-1"></i>Nueva cita</a>
+  {% if user.perfil_paciente %}
+  <a class="btn btn-outline-secondary mt-3 ms-2" href="{% url 'consultas:paciente_detail' user.perfil_paciente.pk %}"><i class="bi bi-person-vcard me-1"></i>Mi perfil</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if mostrar_graficos %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function() {
+  const common = {
+    type: 'bar',
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#5c6478' } },
+        y: { beginAtZero: true, ticks: { color: '#5c6478' } }
+      }
+    }
+  };
+  fetch("{% url 'consultas:chart_citas_especialidad' %}", { headers: { 'Accept': 'application/json' } })
+    .then(r => r.json())
+    .then(data => {
+      new Chart(document.getElementById('chartEspecialidad'), {
+        ...common,
+        data: {
+          labels: data.labels,
+          datasets: [{ data: data.values, backgroundColor: '#0E1F53' }]
+        }
+      });
+    });
+  fetch("{% url 'consultas:chart_pacientes_mes' %}", { headers: { 'Accept': 'application/json' } })
+    .then(r => r.json())
+    .then(data => {
+      new Chart(document.getElementById('chartPacientesMes'), {
+        type: 'line',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Pacientes',
+            data: data.values,
+            borderColor: '#0E1F53',
+            backgroundColor: 'rgba(14,31,83,0.1)',
+            fill: true,
+            tension: 0.25
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#5c6478' } },
+            y: { beginAtZero: true, ticks: { color: '#5c6478' } }
+          }
+        }
+      });
+    });
+})();
+</script>
+{% endif %}
+{% endblock %}

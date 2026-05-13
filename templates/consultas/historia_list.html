@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Historias clínicas — ConsultaMed{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h1 class="h4 mb-0"><i class="bi bi-journal-medical"></i> Historias clínicas</h1>
+  {% if user.role == 'ADMIN' or user.role == 'MEDICO' %}
+  <a class="btn btn-cm-primary" href="{% url 'consultas:historia_create' %}"><i class="bi bi-plus-lg"></i></a>
+  {% endif %}
+</div>
+<div class="table-responsive card card-cm">
+  <table class="table mb-0"><thead><tr><th>Fecha</th><th>Paciente</th><th>Médico</th><th></th></tr></thead>
+  <tbody>
+    {% for h in object_list %}
+    <tr>
+      <td>{{ h.fecha_consulta }}</td>
+      <td>{{ h.paciente }}</td>
+      <td>{{ h.medico }}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'consultas:historia_detail' h.pk %}"><i class="bi bi-eye"></i></a>
+        {% if user.role == 'ADMIN' or user.role == 'MEDICO' %}
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'consultas:historia_update' h.pk %}"><i class="bi bi-pencil"></i></a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'consultas:historia_delete' h.pk %}"><i class="bi bi-trash"></i></a>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}<tr><td colspan="4" class="text-muted">Sin registros.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}
