@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Especialidades — ConsultaMed{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0"><i class="bi bi-hospital"></i> Especialidades</h1>
+  <a class="btn btn-cm-primary" href="{% url 'consultas:especialidad_create' %}"><i class="bi bi-plus-lg"></i></a>
+</div>
+<div class="list-group shadow-sm">
+  {% for e in object_list %}
+  <div class="list-group-item d-flex justify-content-between align-items-center">
+    <div><strong>{{ e.nombre }}</strong><div class="small text-muted">{{ e.descripcion|truncatechars:80 }}</div></div>
+    <div>
+      <a class="btn btn-sm btn-outline-primary" href="{% url 'consultas:especialidad_update' e.pk %}"><i class="bi bi-pencil"></i></a>
+      <a class="btn btn-sm btn-outline-danger" href="{% url 'consultas:especialidad_delete' e.pk %}"><i class="bi bi-trash"></i></a>
+    </div>
+  </div>
+  {% empty %}
+  <div class="list-group-item text-muted">Sin registros.</div>
+  {% endfor %}
+</div>
+{% endblock %}

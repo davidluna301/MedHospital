@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Historia — formulario{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Historia clínica</h1>
+<div class="card card-cm p-4">
+  <form method="post">{% csrf_token %}{{ form|crispy }}
+    <button class="btn btn-cm-primary" type="submit">Guardar</button>
+    <a class="btn btn-link" href="{% url 'consultas:historia_list' %}">Volver</a>
+  </form>
+</div>
+{% endblock %}

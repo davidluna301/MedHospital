@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Horarios — ConsultaMed{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h1 class="h4 mb-0"><i class="bi bi-clock-history"></i> Horarios disponibles</h1>
+  {% if user.role == 'ADMIN' or user.role == 'MEDICO' %}
+  <a class="btn btn-cm-primary" href="{% url 'consultas:horario_create' %}"><i class="bi bi-plus-lg"></i></a>
+  {% endif %}
+</div>
+<div class="table-responsive card card-cm">
+  <table class="table mb-0"><thead><tr><th>Médico</th><th>Día</th><th>Inicio</th><th>Fin</th><th></th></tr></thead>
+  <tbody>
+    {% for h in object_list %}
+    <tr>
+      <td>{{ h.medico }}</td>
+      <td>{{ h.get_dia_semana_display }}</td>
+      <td>{{ h.hora_inicio }}</td>
+      <td>{{ h.hora_fin }}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'consultas:horario_update' h.pk %}"><i class="bi bi-pencil"></i></a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'consultas:horario_delete' h.pk %}"><i class="bi bi-trash"></i></a>
+      </td>
+    </tr>
+    {% empty %}<tr><td colspan="5" class="text-muted">Sin horarios.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

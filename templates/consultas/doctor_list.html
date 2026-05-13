@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Médicos — ConsultaMed{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h1 class="h4 mb-0"><i class="bi bi-person-badge"></i> Médicos</h1>
+  <a class="btn btn-cm-primary" href="{% url 'consultas:doctor_create' %}"><i class="bi bi-plus-lg"></i></a>
+</div>
+<div class="table-responsive card card-cm">
+  <table class="table mb-0"><thead><tr><th>Nombre</th><th>Especialidad</th><th>Cédula</th><th></th></tr></thead>
+  <tbody>
+    {% for d in object_list %}
+    <tr>
+      <td>{{ d.usuario.get_full_name }}</td>
+      <td>{{ d.especialidad }}</td>
+      <td>{{ d.cedula_profesional }}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'consultas:doctor_update' d.pk %}"><i class="bi bi-pencil"></i></a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'consultas:doctor_delete' d.pk %}"><i class="bi bi-trash"></i></a>
+      </td>
+    </tr>
+    {% empty %}<tr><td colspan="4" class="text-muted">Sin médicos.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

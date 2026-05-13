@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Eliminar historia{% endblock %}
+{% block content %}
+<h1 class="h5">¿Eliminar esta historia clínica?</h1>
+<form method="post">{% csrf_token %}
+  <button class="btn btn-danger" type="submit" onclick="return confirm('¿Confirma?');">Eliminar</button>
+  <a class="btn btn-outline-secondary" href="{% url 'consultas:historia_list' %}">Cancelar</a>
+</form>
+{% endblock %}
