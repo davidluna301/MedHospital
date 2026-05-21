@@ -1,4 +1,5 @@
 """Datos de demostración ampliados para ConsultaMed (gráficos y listados)."""
+import os
 import random
 from datetime import date, datetime, time, timedelta
 
@@ -119,17 +120,38 @@ class Command(BaseCommand):
         deleted_users, _ = User.objects.filter(email__iendswith="@consultamed.local").delete()
         self.stdout.write(self.style.WARNING(f"  Usuarios demo eliminados: {deleted_users}"))
 
+    def _needs_dataset_upgrade(self) -> bool:
+        """Detecta el seed pequeño antiguo (p. ej. 2 especialidades, pocas citas)."""
+        if not Specialty.objects.exists():
+            return False
+        return (
+            Specialty.objects.count() < len(SPECIALTIES)
+            or Patient.objects.count() < 40
+            or Appointment.objects.count() < 100
+        )
+
     def handle(self, *args, **options):
+        force = options["force"] or os.environ.get("SEED_DEMO_FORCE", "").lower() == "true"
+
         if Specialty.objects.exists():
-            if not options["force"]:
+            if self._needs_dataset_upgrade():
                 self.stdout.write(
                     self.style.WARNING(
-                        "Ya hay datos. Omitiendo seed. Use --force para reemplazar "
-                        "por el dataset amplio."
+                        "Seed antiguo detectado (pocos registros). "
+                        "Actualizando al dataset amplio…"
+                    )
+                )
+                self._clear_demo_data()
+            elif not force:
+                self.stdout.write(
+                    self.style.WARNING(
+                        "Ya hay datos (dataset amplio). Omitiendo seed. "
+                        "Use --force o SEED_DEMO_FORCE=true para reemplazar."
                     )
                 )
                 return
-            self._clear_demo_data()
+            else:
+                self._clear_demo_data()
 
         self._run_seed()
 
