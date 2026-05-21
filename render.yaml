@@ -11,7 +11,7 @@ services:
     buildCommand: >-
       pip install -r requirements.txt
       && python manage.py migrate --noinput
-      && python manage.py seed_demo
+      && if [ "$SEED_DEMO_FORCE" = "true" ]; then python manage.py seed_demo --force; else python manage.py seed_demo; fi
       && python manage.py collectstatic --noinput
     startCommand: gunicorn hospital_gestion.wsgi:application --bind 0.0.0.0:$PORT
     # Disco persistente (certificados en media/): solo planes de pago en Render.
@@ -35,6 +35,8 @@ services:
           property: connectionString
       - key: SERVE_MEDIA
         value: "True"
+      - key: SEED_DEMO_FORCE
+        value: "false"
 
 databases:
   - name: consultamed-db

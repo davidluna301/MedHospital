@@ -100,13 +100,40 @@ CITAS_POR_ESPECIALIDAD = {
 class Command(BaseCommand):
     help = "Crea especialidades, personal, pacientes y citas de demostración (dataset amplio)."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--force",
+            action="store_true",
+            help="Elimina datos de demo existentes y vuelve a cargar el dataset amplio.",
+        )
+
+    def _clear_demo_data(self):
+        """Borra citas, perfiles y usuarios @consultamed.local (seed anterior o amplio)."""
+        self.stdout.write("Eliminando datos de demostración existentes…")
+        MedicalRecord.objects.all().delete()
+        Appointment.objects.all().delete()
+        DoctorAvailability.objects.all().delete()
+        Patient.objects.all().delete()
+        Doctor.objects.all().delete()
+        Specialty.objects.all().delete()
+        deleted_users, _ = User.objects.filter(email__iendswith="@consultamed.local").delete()
+        self.stdout.write(self.style.WARNING(f"  Usuarios demo eliminados: {deleted_users}"))
+
     def handle(self, *args, **options):
         if Specialty.objects.exists():
-            self.stdout.write(
-                self.style.WARNING("Ya hay datos. Omitiendo seed (borre la BD para re-ejecutar).")
-            )
-            return
+            if not options["force"]:
+                self.stdout.write(
+                    self.style.WARNING(
+                        "Ya hay datos. Omitiendo seed. Use --force para reemplazar "
+                        "por el dataset amplio."
+                    )
+                )
+                return
+            self._clear_demo_data()
 
+        self._run_seed()
+
+    def _run_seed(self):
         random.seed(42)
         esp_map = {}
         for nombre, desc in SPECIALTIES:

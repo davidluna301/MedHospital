@@ -64,12 +64,16 @@ En el plan gratuito a veces **no hay Shell** en el Web Service. Para tener las c
 
 #### Opción 1 — Automático en el próximo deploy (recomendado)
 
-El [`render.yaml`](../render.yaml) ejecuta `python manage.py seed_demo` **después de `migrate`** en cada build. El comando **solo crea datos si la base está vacía**; en redeploys posteriores no duplica nada.
+El [`render.yaml`](../render.yaml) ejecuta `seed_demo` tras `migrate`. Por defecto **no sobrescribe** si ya hay datos.
 
-1. Suba los cambios de `render.yaml` a GitHub (`develop`).
-2. Render → **consultamed** → **Manual Deploy** → **Deploy latest commit**.
-3. Revise los **Build logs**: debe aparecer `Seed completado` o `Ya hay datos. Omitiendo seed`.
-4. Inicie sesión con las credenciales del archivo [`CREDENCIALES_PRUEBA.txt`](../CREDENCIALES_PRUEBA.txt).
+**Si ya existe el seed pequeño antiguo** y quiere el dataset amplio (gráficos):
+
+1. Suba a `develop` el código con `seed_demo --force`.
+2. Render → **consultamed** → **Environment** → `SEED_DEMO_FORCE` = `true`.
+3. **Manual Deploy** → en logs: `Eliminando datos de demostración` y `Seed completado (dataset amplio)` con **210 citas**.
+4. Vuelva a poner `SEED_DEMO_FORCE` = `false` y redeploy (evita borrar datos en cada build).
+
+Alternativa sin variable: use la Opción 2 (`seed_render_db.ps1` con `--force` implícito).
 
 #### Opción 2 — Desde su PC con la URL externa de PostgreSQL
 
@@ -88,7 +92,7 @@ No necesita Shell: conecta su Django local a la misma BD que usa Render.
 
 > La URL externa es sensible: no la suba a GitHub ni la comparta. Solo úsela en su máquina.
 
-Si aparece `Ya hay datos. Omitiendo seed`, la BD ya tiene usuarios; use las credenciales existentes o borre datos solo si es un entorno de prueba desechable.
+Si aparece `Ya hay datos. Omitiendo seed`, ejecute con **`--force`** (el script `seed_render_db.ps1` lo hace por defecto) o active `SEED_DEMO_FORCE=true` un solo deploy en Render.
 
 #### Opción 3 — Shell (si su plan la habilita)
 

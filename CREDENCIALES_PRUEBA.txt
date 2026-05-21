@@ -4,10 +4,15 @@ Estas cuentas las crea el comando `python manage.py seed_demo` después de `migr
 
 ## Cargarlas en Render sin Shell (plan free)
 
-1. **Redeploy:** el `render.yaml` ejecuta `seed_demo` en el build si la BD está vacía.
-2. **Desde tu PC:** Render → consultamed-db → **External Database URL** →
+Si ya corrió un seed antiguo y no ve el dataset amplio:
+
+1. **Desde tu PC (recomendado):** External Database URL →
    `.\scripts\seed_render_db.ps1 "postgres://..."`
-   Ver `docs/DESPLIEGUE.md` sección "Sin Shell".
+   (usa `--force` por defecto y reemplaza los datos demo).
+2. **O en Render:** Environment → `SEED_DEMO_FORCE` = `true` → Manual Deploy →
+   luego vuelva a poner `false` (solo un redeploy con force).
+
+Ver `docs/DESPLIEGUE.md` sección "Sin Shell".
 
 | Rol            | Correo                      | Contraseña    |
 |----------------|-----------------------------|---------------|

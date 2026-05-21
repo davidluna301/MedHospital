@@ -9,7 +9,8 @@
 
 param(
     [Parameter(Position = 0)]
-    [string]$DatabaseUrl = $env:DATABASE_URL
+    [string]$DatabaseUrl = $env:DATABASE_URL,
+    [switch]$NoForce
 )
 
 $ErrorActionPreference = "Stop"
@@ -36,8 +37,9 @@ $env:DJANGO_DEBUG = "True"
 if (-not $env:DJANGO_ALLOWED_HOSTS) { $env:DJANGO_ALLOWED_HOSTS = "127.0.0.1,localhost" }
 if (-not $env:DJANGO_SECRET_KEY) { $env:DJANGO_SECRET_KEY = "solo-para-comando-local-seed" }
 
-Write-Host "Conectando a la BD de Render y ejecutando seed_demo..." -ForegroundColor Cyan
-python manage.py seed_demo
+$seedArgs = if ($NoForce) { @() } else { @("--force") }
+Write-Host "Conectando a la BD de Render y ejecutando seed_demo $($seedArgs -join ' ')..." -ForegroundColor Cyan
+python manage.py seed_demo @seedArgs
 Write-Host ""
 Write-Host "Listo. Use las cuentas de CREDENCIALES_PRUEBA.txt en:" -ForegroundColor Green
 Write-Host "  https://consultamed.onrender.com/cuentas/iniciar-sesion/" -ForegroundColor Green
