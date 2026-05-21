@@ -16,6 +16,10 @@ Estas cuentas las crea el comando `python manage.py seed_demo` después de `migr
 | Médico         | medico@consultamed.local    | Medico123!    |
 | Paciente       | paciente@consultamed.local  | Paciente123!  |
 
+**Dataset amplio (tras `seed_demo`):** 8 especialidades, 14 médicos, 55 pacientes, ~210 citas.
+Cuentas extra: `medico02@`…`medico14@`, `paciente02@`…`paciente55@`, `operador02@` → contraseña `Demo123!`
+(salvo las 4 filas de la tabla, que mantienen su contraseña propia).
+
 - El **administrador** registra nuevos médicos desde **Médicos → Nuevo**.
 - El **operador** registra pacientes desde **Pacientes → Nuevo** (icono +).
 - Los **pacientes** no se registran solos en la web pública; deben ser dados de alta por recepción (o vía `/admin/` en casos excepcionales).
