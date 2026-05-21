@@ -164,19 +164,21 @@ flowchart LR
 - **Médico:** sus citas, horarios propios, historias donde figure como médico, exportaciones; puede eliminar sus citas.
 - **Paciente:** solo sus citas (consulta y **nueva cita** con validación de disponibilidad); **no** edita citas en el formulario general; puede **descargar constancia PDF** y **adjuntar certificado** en citas confirmadas o completadas; ve su historia clínica y su perfil desde el panel.
 
-## Despliegue (Render / Railway / PythonAnywhere)
+## Despliegue en producción
 
-1. **Variables de entorno:** copie `.env.example` y defina al menos `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=False`, `DJANGO_ALLOWED_HOSTS`.
-2. **Base de datos:** en Render/Railway use PostgreSQL y asigne `DATABASE_URL` (el proyecto usa `dj-database-url` cuando existe la variable).
-3. **Estáticos:** con `DEBUG=False` ejecute `python manage.py collectstatic` en el build; **WhiteNoise** sirve los archivos estáticos.
-4. **Comando de arranque típico (Render):** `gunicorn hospital_gestion.wsgi:application --bind 0.0.0.0:$PORT`
+La interfaz (Bootstrap + plantillas Django) y el backend se despliegan en **un solo servicio web**; la base de datos es **PostgreSQL** enlazada con `DATABASE_URL`.
 
-Ejemplo de `build` y `start` en Render:
+**Guía paso a paso (Render, checklist, correo, media):** [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md)
 
-- Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate`
-- Start: `gunicorn hospital_gestion.wsgi:application --bind 0.0.0.0:$PORT`
+**Despliegue rápido en Render:** conectar el repo en **New → Blueprint** usando [`render.yaml`](render.yaml) (crea Web Service + PostgreSQL + disco para certificados).
 
-> Añada `gunicorn` a `requirements.txt` si despliega con Gunicorn (no incluido por defecto en este repo mínimo).
+Resumen:
+
+1. Variables mínimas: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=False`, `DATABASE_URL` (ver [`.env.example`](.env.example)).
+2. Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput`
+3. Start: `gunicorn hospital_gestion.wsgi:application --bind 0.0.0.0:$PORT`
+4. Tras el primer deploy: `python manage.py createsuperuser` en la Shell de Render.
+5. Health check: `/health/`
 
 ## Correo electrónico
 

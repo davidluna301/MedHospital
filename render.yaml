@@ -1,12 +1,27 @@
-# Ejemplo Render.com — alinear rama de despliegue con `develop` del repositorio GitHub.
-# https://github.com/davidluna301/MedHospital
+# Blueprint Render.com — ConsultaMed (Django + PostgreSQL)
+# Repo: https://github.com/davidluna301/MedHospital  rama: develop
+# En el panel: New > Blueprint > conectar GitHub y seleccionar este archivo.
 services:
   - type: web
     name: consultamed
     runtime: python
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    plan: free
+    branch: develop
+    healthCheckPath: /health/
+    buildCommand: >-
+      pip install -r requirements.txt
+      && python manage.py collectstatic --noinput
+      && python manage.py migrate --noinput
     startCommand: gunicorn hospital_gestion.wsgi:application --bind 0.0.0.0:$PORT
+    # Disco persistente (certificados en media/): solo planes de pago en Render.
+    # Si actualiza a Starter+, descomente:
+    # disk:
+    #   name: consultamed-media
+    #   mountPath: /opt/render/project/src/media
+    #   sizeGB: 1
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DJANGO_DEBUG
@@ -17,8 +32,11 @@ services:
         fromDatabase:
           name: consultamed-db
           property: connectionString
+      - key: SERVE_MEDIA
+        value: "True"
 
 databases:
   - name: consultamed-db
+    plan: free
     databaseName: consultamed
     user: consultamed
