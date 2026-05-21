@@ -1,6 +1,13 @@
-# Credenciales de demostración local únicamente (no producción).
+# Credenciales de demostración (local o producción tras `seed_demo`).
 
 Estas cuentas las crea el comando `python manage.py seed_demo` después de `migrate`.
+
+## Cargarlas en Render sin Shell (plan free)
+
+1. **Redeploy:** el `render.yaml` ejecuta `seed_demo` en el build si la BD está vacía.
+2. **Desde tu PC:** Render → consultamed-db → **External Database URL** →
+   `.\scripts\seed_render_db.ps1 "postgres://..."`
+   Ver `docs/DESPLIEGUE.md` sección "Sin Shell".
 
 | Rol            | Correo                      | Contraseña    |
 |----------------|-----------------------------|---------------|

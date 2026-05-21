@@ -58,29 +58,56 @@ Render define automáticamente:
 
 En la mayoría de despliegues solo en Render **no hace falta** tocar `DJANGO_ALLOWED_HOSTS`.
 
-### Crear el primer administrador (obligatorio en producción)
+### Usuarios de prueba sin Shell (plan free de Render)
 
-El comando `seed_demo` es para **desarrollo local** (contraseñas públicas en `CREDENCIALES_PRUEBA.txt`). En producción use una de estas opciones:
+En el plan gratuito a veces **no hay Shell** en el Web Service. Para tener las cuentas de `CREDENCIALES_PRUEBA.txt` en la BD de producción use una de estas vías:
 
-**A) Superusuario (recomendado)**
+#### Opción 1 — Automático en el próximo deploy (recomendado)
 
-1. Render → servicio **consultamed** → **Shell**.
-2. Ejecutar:
+El [`render.yaml`](../render.yaml) ejecuta `python manage.py seed_demo` **después de `migrate`** en cada build. El comando **solo crea datos si la base está vacía**; en redeploys posteriores no duplica nada.
+
+1. Suba los cambios de `render.yaml` a GitHub (`develop`).
+2. Render → **consultamed** → **Manual Deploy** → **Deploy latest commit**.
+3. Revise los **Build logs**: debe aparecer `Seed completado` o `Ya hay datos. Omitiendo seed`.
+4. Inicie sesión con las credenciales del archivo [`CREDENCIALES_PRUEBA.txt`](../CREDENCIALES_PRUEBA.txt).
+
+#### Opción 2 — Desde su PC con la URL externa de PostgreSQL
+
+No necesita Shell: conecta su Django local a la misma BD que usa Render.
+
+1. Render → base de datos **consultamed-db** → **Connect** (o **Info**).
+2. Copie **External Database URL** (formato `postgres://...`).
+3. En PowerShell, desde la raíz del proyecto:
+
+```powershell
+.\scripts\seed_render_db.ps1 "postgres://USUARIO:PASSWORD@HOST:5432/consultamed"
+```
+
+4. Si sale `Seed completado`, use las cuentas de `CREDENCIALES_PRUEBA.txt` en  
+   `https://consultamed.onrender.com/cuentas/iniciar-sesion/`.
+
+> La URL externa es sensible: no la suba a GitHub ni la comparta. Solo úsela en su máquina.
+
+Si aparece `Ya hay datos. Omitiendo seed`, la BD ya tiene usuarios; use las credenciales existentes o borre datos solo si es un entorno de prueba desechable.
+
+#### Opción 3 — Shell (si su plan la habilita)
 
 ```bash
 python manage.py createsuperuser
-```
-
-3. Asignar correo, nombre y contraseña **fuertes**.
-4. En `/admin/` o con un usuario `role=ADMIN` en la app, gestionar el resto.
-
-**B) Datos de demostración (solo entrega académica / demo)**
-
-```bash
+# o
 python manage.py seed_demo
 ```
 
-Solo si la base está vacía. **No** usar las contraseñas de `CREDENCIALES_PRUEBA.txt` en un entorno real.
+### Credenciales tras `seed_demo`
+
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `admin@consultamed.local` | `Admin123!` |
+| Operador | `operador@consultamed.local` | `Operador123!` |
+| Médico | `medico@consultamed.local` | `Medico123!` |
+| Paciente | `paciente@consultamed.local` | `Paciente123!` |
+
+Son contraseñas **públicas de demo**; válidas para pruebas académicas, no para un hospital real en producción.
 
 ### Comprobar que todo funciona
 
