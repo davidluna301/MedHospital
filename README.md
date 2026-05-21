@@ -207,21 +207,32 @@ Al pasar una cita a estado **Confirmada**, se envía un correo a paciente y méd
 └── README.md
 ```
 
-## Evidencia de ejecución local (`runserver`)
+## Evidencia de despliegue y funcionamiento
 
-Tras `migrate`, `seed_demo` y `python manage.py runserver`, la aplicación queda disponible en `http://127.0.0.1:8000/`. Las capturas siguientes documentan **vistas** públicas y del panel con usuario **administrador** (`admin@consultamed.local`), mostrando navegación por citas, especialidades, médicos, pacientes, historias clínicas y horarios (funcionalidades expuestas en `consultas/urls.py` y vistas asociadas).
+**Producción (Render):** [https://consultamed.onrender.com](https://consultamed.onrender.com)  
+**Dataset de demo:** `seed_demo` amplio — 210 citas, 55 pacientes, 14 médicos, 8 especialidades (ver [`CREDENCIALES_PRUEBA.txt`](CREDENCIALES_PRUEBA.txt)).
+
+Capturas tomadas en el entorno desplegado con usuario **administrador** (`admin@consultamed.local`). El panel muestra indicadores y gráficos **Chart.js** alimentados por la API (`/api/chart/...`).
 
 | Vista / función | Captura |
 |-----------------|--------|
 | Landing (`/`) | ![Landing](capturas/01_landing.png) |
 | Inicio de sesión (`/cuentas/iniciar-sesion/`) | ![Login](capturas/02_login.png) |
-| Panel administrador con gráficos (`/panel/`) | ![Panel admin](capturas/03_panel_admin.png) |
+| Panel administrador — KPIs y gráficos (`/panel/`) | ![Panel admin](capturas/03_panel_admin.png) |
 | Listado de citas (`/citas/`) | ![Citas](capturas/04_citas_listado.png) |
 | Especialidades (`/especialidades/`) | ![Especialidades](capturas/05_especialidades.png) |
 | Médicos (`/medicos/`) | ![Médicos](capturas/06_medicos.png) |
 | Pacientes (`/pacientes/`) | ![Pacientes](capturas/07_pacientes.png) |
 | Historias clínicas (`/historias/`) | ![Historias](capturas/08_historias_clinicas.png) |
 | Horarios de disponibilidad (`/horarios/`) | ![Horarios](capturas/09_horarios_disponibilidad.png) |
+
+Para regenerar las capturas:
+
+```bash
+pip install playwright && python -m playwright install chromium
+python scripts/capture_readme.py
+# Local: python scripts/capture_readme.py --base-url http://127.0.0.1:8000
+```
 
 ## Evidencia de historial en Git (Git Graph)
 
